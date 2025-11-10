@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dear Laila</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Lato:wght@400&family=Inter:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Background */
+        .gradient-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, #0a1128 0%, #050814 50%, #000000 100%);
+        }
+
+        /* Nebula Effects */
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: nebula 15s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .nebula-1 {
+            left: 10%;
+            top: 20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
+            animation-delay: 0s;
+        }
+
+        .nebula-2 {
+            right: 15%;
+            top: 50%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(30, 144, 255, 0.2) 0%, transparent 70%);
+            animation-delay: 5s;
+        }
+
+        .nebula-3 {
+            left: 50%;
+            bottom: 20%;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(255, 20, 147, 0.2) 0%, transparent 70%);
+            animation-delay: 10s;
+        }
+
+        /* Stars */
+        .star {
+            position: absolute;
+            background: radial-gradient(circle, #ffffff 0%, #ffeb3b 50%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .star.far { opacity: 0.3; }
+        .star.medium { opacity: 0.5; }
+        .star.near { opacity: 0.7; }
+
+        /* Moon */
+        .moon-container {
+            position: absolute;
+            top: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            z-index: 100;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .moon-container:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        .moon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fef6e4;
+            box-shadow: 
+                0 0 40px 15px rgba(254, 246, 228, 0.6),
+                0 0 80px 30px rgba(254, 246, 228, 0.4),
+                0 0 120px 45px rgba(254, 246, 228, 0.2);
+            animation: moonGlow 8s ease-in-out infinite;
+        }
+
+        /* Shooting Star */
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: shootingStar 2s linear;
+            pointer-events: none;
+        }
+
+        /* Content */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 80px 20px;
+        }
+
+        .letter-container {
+            width: 100%;
+            max-width: 580px;
+            min-height: 400px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .text-content {
+            animation: fadeInText 1.8s ease-out forwards;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            background: rgba(10, 17, 40, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .text-content.fade-out {
+            animation: fadeOutText 1.8s ease-out forwards;
+        }
+
+        .heading {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 400;
+            color: #f8f9fa;
+            text-align: justify;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+        }
+
+        .body-text {
+            font-family: 'Lato', sans-serif;
+            font-size: 19px;
+            font-weight: 400;
+            color: #f8f9fa;
+            text-align: justify;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+        }
+
+        .signature {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 400;
+            color: #f8f9fa;
+            text-align: justify;
+            line-height: 1.9;
+            letter-spacing: 0.5px;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.5s ease;
+        }
+
+        .progress-dot.active {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Tap Hint */
+        .tap-hint {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #f8f9fa;
+            text-align: center;
+            margin-top: 24px;
+            opacity: 0.6;
+        }
+
+        /* Animations */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes moonGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 40px 15px rgba(254, 246, 228, 0.6),
+                    0 0 80px 30px rgba(254, 246, 228, 0.4),
+                    0 0 120px 45px rgba(254, 246, 228, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 60px 20px rgba(254, 246, 228, 0.8),
+                    0 0 100px 40px rgba(254, 246, 228, 0.6),
+                    0 0 160px 60px rgba(254, 246, 228, 0.3);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @keyframes shootingStar {
+            0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+            100% { transform: translateX(300px) translateY(300px) rotate(-45deg); opacity: 0; }
+        }
+
+        @keyframes fadeInText {
+            0% { opacity: 0; transform: translateY(10px); filter: blur(5px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        @keyframes fadeOutText {
+            0% { opacity: 1; transform: translateY(0); filter: blur(0); }
+            100% { opacity: 0; transform: translateY(-10px); filter: blur(5px); }
+        }
+
+        @keyframes nebula {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        @media (max-width: 640px) {
+            .letter-container {
+                padding: 30px 25px;
+            }
+            
+            .text-content {
+                padding: 25px 20px;
+            }
+            
+            .heading {
+                font-size: 28px;
+            }
+            
+            .body-text {
+                font-size: 18px;
+            }
+            
+            .signature {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body></body>
+    <audio id="bg-music" loop style="display:none;">
+        <source src="seasons.mp3" type="audio/mpeg">
+      </audio>
+    
+      <script>
+        document.body.addEventListener('click', () => {
+          const audio = document.getElementById('bg-music');
+          audio.play();
+        }, { once: true }); // biar cuma klik pertama aja yang aktifin
+      </script>
+    <div class="container">
+        <!-- Background -->
+        <div class="gradient-bg"></div>
+        
+        <!-- Nebula Effects -->
+        <div class="nebula nebula-1"></div>
+        <div class="nebula nebula-2"></div>
+        <div class="nebula nebula-3"></div>
+
+        <!-- Stars Container -->
+        <div id="starsContainer"></div>
+
+        <!-- Shooting Stars Container -->
+        <div id="shootingStarsContainer"></div>
+
+        <!-- Moon -->
+        <div class="moon-container" id="moon" onclick="handleNext()">
+            <div class="moon"></div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-wrapper">
+            <div class="letter-container">
+                <div id="textContent" class="text-content">
+                    <h1 class="heading" id="mainText">Dear Laila</h1>
+                </div>
+
+                <!-- Progress Indicator -->
+                <div class="progress-container" id="progressContainer"></div>
+
+                <!-- Tap Hint -->
+                <p class="tap-hint" id="tapHint">Tap moon to continue</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const paragraphs = [
+            "Dear Laila",
+            "Mungkin ini akan sedikit panjang, tapi aku harap kamu baca semuanya hehe, pelan pelan aja yaa.",
+            "Heiii Laiiilll Aku suka kamu, I like you, joahaeyo, anata ga suki. apapun tentangmu aku suka. Ya mungkin ini gabakal terlalu ngagetin kamu haha, kamu pasti udah pernah denger kalau aku suka kamu dari beberapa waktu yang lalu.",
+            "Tujuan aku confess ini bukan untuk ngajak pacaran, tapi aku ingin mengakui perasaan yang udah aku pendam selama lebih dari setahun ini dari diriku secara langsung. Aku gamau menyesal di kemudian hari kalau aku engga confess ke kamu. Entah kenapa tiap hari pasti selalu aja ada kamu di sela sela pikiran aku, seolah olah otak ga mau ngasih jeda buat berhenti mikirin kamu. Tapi belakangan ini aku sering bingung sebenarnya kamu suka aku juga atau engga. Itulah yang selalu terulang ulang di pikiran ku belakangan ini. Karenaa pikiran ini, aku terkadang sulit untuk fokus belajar dan malah mikirin kamu terus wkwkwk. Aku selalu khawatir kalau kamu ga suka aku balik. Tapi aku mulai tersadar kalau setiap orang itu pasti punya pilihannya masing masing. Nah pilihanku adalah kamu. Tapi pilihanmu adalah kehendakmu. Aku akan menghargai pilihanmu, apapun itu.",
+            "Terimakasih juga selama ini telah membuat hidupku berwarna, kamu ngenalin aku ke dunia korea. Aku pun malah jadi tertarik beneran. Padahal awalnya aku cuma modus doang buat deketin kamu haha. Makasih juga udah meluangkan waktu buat mabar sama aku. Maaf bangett kalau selama ini aku ngeganggu kamu.",
+            "Mengingat waktu kita di kelas 12 ga akan lama lagi, jadi aku berpikir ini mungkin waktu yang tepat untuk aku menyatakan perasaan. Karena setelah ini kita akan disibukkan dengan PSAJ, Waradhana, dan UTBK. Aku ingin meluruskan hubungan di antara kita inii, agar bisa fokus di kesibukan selanjutnya dan tidak dibayang-bayangi perasaanku ini. Aku harap juga pernyataan aku ini engga membebani pikiran kamuu. Daann apapun jawaban kamu nanti, aku bakal tetep nganggap kamu orang yang berarti di hatiku. Aku cuma pengen semuanya tetap baik-baik aja di antara kita walaupun setelah confession ini. Jadi aku harap kita tetep berteman seperti biasanya. Semoga yang selalu kamu impi-impikan akan dikabulkan dengan ada aku di sana haha.",
+            "Rizal"
+        ];
+
+        let currentParagraph = 0;
+        let isAnimating = false;
+
+        // Generate stars
+        function generateStars() {
+            const starsContainer = document.getElementById('starsContainer');
+            
+            const layers = [
+                { count: 80, className: 'far', sizeRange: [1, 2] },
+                { count: 50, className: 'medium', sizeRange: [1.5, 3] },
+                { count: 30, className: 'near', sizeRange: [2, 4] }
+            ];
+
+            layers.forEach(layer => {
+                for (let i = 0; i < layer.count; i++) {
+                    const star = document.createElement('div');
+                    star.className = `star ${layer.className}`;
+                    
+                    const size = layer.sizeRange[0] + Math.random() * (layer.sizeRange[1] - layer.sizeRange[0]);
+                    const left = Math.random() * 100;
+                    const top = Math.random() * 100;
+                    const duration = 3 + Math.random() * 4;
+                    const delay = Math.random() * 5;
+                    
+                    star.style.left = `${left}%`;
+                    star.style.top = `${top}%`;
+                    star.style.width = `${size}px`;
+                    star.style.height = `${size}px`;
+                    star.style.animation = `twinkle ${duration}s ease-in-out infinite`;
+                    star.style.animationDelay = `${delay}s`;
+                    
+                    starsContainer.appendChild(star);
+                }
+            });
+        }
+
+        // Create shooting stars
+        function createShootingStar() {
+            const container = document.getElementById('shootingStarsContainer');
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.left = `${Math.random() * 50}%`;
+            star.style.top = `${Math.random() * 30}%`;
+            
+            container.appendChild(star);
+            
+            setTimeout(() => {
+                container.removeChild(star);
+            }, 2000);
+        }
+
+        // Initialize progress dots
+        function initProgressDots() {
+            const container = document.getElementById('progressContainer');
+            paragraphs.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (index === 0) dot.classList.add('active');
+                container.appendChild(dot);
+            });
+        }
+
+        // Update progress dots
+        function updateProgressDots() {
+            const dots = document.querySelectorAll('.progress-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentParagraph) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // Update tap hint
+        function updateTapHint() {
+            const hint = document.getElementById('tapHint');
+            if (currentParagraph === 0) {
+                hint.textContent = 'Tap moon to continue';
+            } else if (currentParagraph === paragraphs.length - 1) {
+                hint.textContent = 'makasih yaa udah baca sampe akhir';
+            } else {
+                hint.textContent = 'Tap moon to continue';
+            }
+        }
+
+        // Update text content
+        function updateContent() {
+            const textContent = document.getElementById('textContent');
+            const mainText = document.getElementById('mainText');
+            
+            if (currentParagraph === 0) {
+                mainText.className = 'heading';
+            } else if (currentParagraph === paragraphs.length - 1) {
+                mainText.className = 'signature';
+            } else {
+                mainText.className = 'body-text';
+            }
+            
+            mainText.textContent = paragraphs[currentParagraph];
+            updateProgressDots();
+            updateTapHint();
+            updateMoonOpacity();
+        }
+
+        // Update moon opacity
+        function updateMoonOpacity() {
+            const moon = document.getElementById('moon');
+            if (currentParagraph < paragraphs.length - 1) {
+                moon.style.opacity = '1';
+                moon.style.cursor = 'pointer';
+            } else {
+                moon.style.opacity = '0.5';
+                moon.style.cursor = 'default';
+            }
+        }
+
+        // Handle next
+        function handleNext() {
+            if (isAnimating || currentParagraph >= paragraphs.length - 1) return;
+            
+            isAnimating = true;
+            const textContent = document.getElementById('textContent');
+            textContent.classList.add('fade-out');
+            
+            setTimeout(() => {
+                currentParagraph++;
+                updateContent();
+                textContent.classList.remove('fade-out');
+                isAnimating = false;
+            }, 300);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            generateStars();
+            initProgressDots();
+            updateMoonOpacity();
+            
+            // Create shooting stars periodically
+            setInterval(createShootingStar, 18000);
+        });
+    </script>
+</body>
+</html>
